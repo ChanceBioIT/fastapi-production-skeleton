@@ -1,0 +1,37 @@
+[Unit]
+Description={{APP_NAME}} - Task Worker
+After=network.target mysql.service redis.service fastapi-app.service
+Requires=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/www/your-app/current
+User=www-data
+Group=www-data
+# Replace when deploying: WorkingDirectory, User, Group, ExecStart path, ReadWritePaths, SyslogIdentifier
+
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+Environment="APP_ENV=production"
+
+ExecStart=python -m apps.tasks.worker_manager --workers 4 --poll-interval 1 --monitor-interval 30 --restart-delay 5 --max-restarts 10 --restart-window 3600
+
+Restart=always
+RestartSec=10
+StartLimitInterval=300
+StartLimitBurst=5
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/www/your-app/shared/logs /var/www/your-app/shared/job_workspace /var/www/your-app/shared/data
+
+LimitNOFILE=65536
+LimitNPROC=4096
+
+StandardOutput=file:/var/www/your-app/shared/logs/worker_manager_stdout.log
+StandardError=file:/var/www/your-app/shared/logs/worker_manager_stderr.log
+SyslogIdentifier=fastapi-worker
+
+[Install]
+WantedBy=multi-user.target

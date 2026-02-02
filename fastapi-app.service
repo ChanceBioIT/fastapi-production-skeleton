@@ -1,0 +1,33 @@
+[Unit]
+Description={{APP_NAME}} - FastAPI Application with Gunicorn
+After=network.target mysql.service redis.service
+Requires=network.target
+
+[Service]
+Type=notify
+WorkingDirectory=/var/www/your-app/current
+User=www-data
+Group=www-data
+# Replace when deploying: WorkingDirectory, User, Group, path in ExecStart, SyslogIdentifier
+
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+Environment="APP_ENV=production"
+
+ExecStart=/usr/local/bin/gunicorn main:app -c gunicorn.conf.py
+
+Restart=always
+RestartSec=10
+StartLimitInterval=300
+StartLimitBurst=5
+
+LimitNOFILE=65536
+LimitNPROC=4096
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=fastapi-app
+
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target

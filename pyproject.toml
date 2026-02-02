@@ -1,0 +1,55 @@
+[tool.poetry]
+name = "fastapi-production-skeleton"
+version = "1.0.0"
+description = "Production-ready FastAPI skeleton with auth, task queue, and plugin support"
+authors = ["FastAPI Skeleton"]
+readme = "README.md"
+packages = [{include = "framework"}, {include = "apps"}]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.14.1 || >3.14.1,<4.0"
+# Core web framework
+fastapi = "^0.115.14"
+uvicorn = {extras = ["standard"], version = "^0.32.0"}
+python-multipart = "^0.0.9"
+gunicorn = "^23.0.0"  # Production WSGI server
+
+# Database and ORM (SQLModel stack)
+sqlmodel = "^0.0.31"
+aiomysql = "^0.2.0"
+sqlalchemy = "^2.0.45"
+alembic = "^1.17.2"
+pymysql = "^1.1.2"
+
+# Async tasks and message queue
+redis = "^7.1.0"
+
+# Auth and security
+python-jose = {extras = ["cryptography"], version = "^3.5.0"}
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+bcrypt = ">=3.2.0,<4.0.0"
+python-dotenv = "^1.2.1"
+pydantic-settings = "^2.1.0"
+
+# Logging and monitoring
+loguru = "^0.7.3"
+
+# External integration and notifications
+httpx = "^0.28.1"
+aiosmtplib = "^5.0.0"
+
+# Example task plugin deps (seq_tool); remove if unused
+pandas = "^2.3.3"
+
+# Testing (also used at runtime)
+aiosqlite = "^0.22.1"
+
+[tool.poetry.group.dev.dependencies]
+# Testing and development
+pytest = "^9.0.2"
+pytest-asyncio = "^1.3.0"
+pytest-cov = "^7.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
